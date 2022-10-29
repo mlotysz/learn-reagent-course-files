@@ -1,5 +1,5 @@
 (ns giggin.core
-  (:require [reagent.core :as r]
+  (:require [reagent.dom :as rd]
             [giggin.components.header :refer [header]]
             [giggin.components.gigs :refer [gigs]]
             [giggin.components.orders :refer [orders]]
@@ -16,6 +16,6 @@
 
 (defn ^:export main
   []
-  (r/render
-    [app]
-    (.getElementById js/document "app")))
+  (rd/render
+   [app]
+   (.getElementById js/document "app")))
