@@ -18,4 +18,9 @@
            [:div.content
             [:p.title (str title " \u00D7 " quant)]]
            [:div.action
-            [:div.price total]]])))]]])
+            [:div.price total]
+            [:button.btn-btn--link.tooltip
+             {:data-tooltip "Remove"
+              :on-click #(swap! state/orders dissoc id)}
+             [:i.icon.icon--cross]]]
+           ])))]]])
