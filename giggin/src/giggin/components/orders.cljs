@@ -1,7 +1,8 @@
 (ns giggin.components.orders
   (:require
     [giggin.state :as state]
-    [giggin.helpers :as h]))
+    [giggin.helpers :as h]
+    [giggin.components.checkout-modal :as m]))
 
 (defn- total
   []
@@ -44,4 +45,5 @@
         [:button.btn.btn--link.tooltip
          {:data-tooltip "Remove all"
           :on-click #(reset! state/orders {})}
-         [:i.icon.icon--delete]]]]])])
+         [:i.icon.icon--delete]]]
+       [m/checkout-modal]]])])
