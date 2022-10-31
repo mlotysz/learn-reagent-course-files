@@ -8,7 +8,8 @@
 (defn gigs
   []
   (let [modal (r/atom {:active false})
-        values (r/atom {:id nil :title "" :desc "" :img "" :price 0 :sold-out false})
+        initial-values {:id nil :title "" :desc "" :img "" :price 0 :sold-out false}
+        values (r/atom initial-values)
         toggle-modal (fn [{:keys [active gig]}]
                        (swap! modal assoc :active active)
                        (reset! values gig))
@@ -20,25 +21,31 @@
                                                  :img (str/trim img)
                                                  :price (js/parseInt price)
                                                  :sold-out sold-out})
-                     (toggle-modal {:active false :gig {}}))]
+                     (toggle-modal {:active false :gig initial-values}))]
     (fn
       []
       [:main
        [:div.gigs
         [:button.add-gig
-         {:on-click #(toggle-modal {:active true :gig {}})}
+         {:on-click #(toggle-modal {:active true :gig initial-values})}
          [:div.add__title
           [:i.icon.icon--plus]
           [:p "Add gig"]]]
-        [e/gig-editor modal values upsert-gig toggle-modal]
+        [e/gig-editor {:modal modal
+                       :values values
+                       :upsert-gig upsert-gig
+                       :toggle-modal toggle-modal
+                       :initial-values initial-values}]
         (for [{:keys [id img title price desc] :as gig} (vals @state/gigs)]
           [:div.gig {:key id}
-           [:img.gig__artwork.gig__edit {:src img :alt title :on-click #(toggle-modal {:active true :gig gig})}]
+           [:img.gig__artwork.gig__edit {:src img :alt title
+                                         :on-click #(toggle-modal {:active true
+                                                                   :gig gig})}]
            [:div.gig__body
             [:div.gig__title
              [:div.btn.btn--primary.float--right.tooltip
               {:data-tooltip "Add to order"
-               :on-click #(swap! state/orders update id inc)}
+               :on-click #(add-to-order id)} 1
               [:i.icon.icon--plus]] title
              [:p.gig__price (h/format-price price)]
              [:p.gig__desc desc]]]])]])))
